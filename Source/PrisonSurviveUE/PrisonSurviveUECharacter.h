@@ -58,6 +58,24 @@ protected:
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
+	void SprintStart();
+	void SprintStop();
+
+	void Heal(int Amount);
+	void HealTest();
+
+	void TakeDamage(int Amount);
+	void DamageTest();
+
+	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStats")
+	int HealthMax;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="PlayerStats")
+	int Health;
+
+
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

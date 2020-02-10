@@ -45,17 +45,28 @@ APrisonSurviveUECharacter::APrisonSurviveUECharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	HealthMax = 100;
+	Health = HealthMax;
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Input
+
+
 
 void APrisonSurviveUECharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping); 
+	
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &APrisonSurviveUECharacter::SprintStart);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &APrisonSurviveUECharacter::SprintStop);
+
+	PlayerInputComponent->BindAction("HealTest", IE_Pressed, this, &APrisonSurviveUECharacter::HealTest);
+	PlayerInputComponent->BindAction("DamageTest", IE_Pressed, this, &APrisonSurviveUECharacter::DamageTest);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &APrisonSurviveUECharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &APrisonSurviveUECharacter::MoveRight);
@@ -132,3 +143,55 @@ void APrisonSurviveUECharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
+
+void APrisonSurviveUECharacter::SprintStart()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 600;
+}
+
+void APrisonSurviveUECharacter::SprintStop()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 300;
+}
+
+void APrisonSurviveUECharacter::Heal(int Amount)
+{
+	Health += Amount;
+	if (Health > HealthMax)
+	{
+		Health = HealthMax;
+	}
+}
+
+void APrisonSurviveUECharacter::HealTest()
+{
+	Heal(10);
+}
+
+void APrisonSurviveUECharacter::TakeDamage(int Amount)
+{
+	Health -= Amount;
+	if (Health < 0)
+	{
+		Health = 0;
+	}
+}
+
+void APrisonSurviveUECharacter::DamageTest()
+{
+	TakeDamage(10);
+	
+	
+}
+
+#if WITH_EDITOR 
+void APrisonSurviveUECharacter::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+{
+	FName PropertyName = (PropertyChangedEvent.Property != nullptr) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
+	if ((PropertyName == GET_MEMBER_NAME_CHECKED(APrisonSurviveUECharacter, HealthMax)))
+	{
+		Health = HealthMax;
+	}
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+}
+#endif
