@@ -48,6 +48,9 @@ APrisonSurviveUECharacter::APrisonSurviveUECharacter()
 
 	HealthMax = 100;
 	Health = HealthMax;
+	WalkSpeed = 300;
+	RunSpeed = 600;
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -146,16 +149,17 @@ void APrisonSurviveUECharacter::MoveRight(float Value)
 
 void APrisonSurviveUECharacter::SprintStart()
 {
-	GetCharacterMovement()->MaxWalkSpeed = 600;
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 }
 
 void APrisonSurviveUECharacter::SprintStop()
 {
-	GetCharacterMovement()->MaxWalkSpeed = 300;
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
 void APrisonSurviveUECharacter::Heal(int Amount)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Character healed by value: %d"), Amount);
 	Health += Amount;
 	if (Health > HealthMax)
 	{
@@ -170,6 +174,7 @@ void APrisonSurviveUECharacter::HealTest()
 
 void APrisonSurviveUECharacter::TakeDamage(int Amount)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Damage has been taken with value: %d"), Amount);
 	Health -= Amount;
 	if (Health < 0)
 	{

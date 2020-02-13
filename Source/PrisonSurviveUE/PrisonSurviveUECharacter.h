@@ -69,11 +69,21 @@ protected:
 
 	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
+	/** Maximum value of health*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStats")
 	int HealthMax;
+
+	/**Current health of character*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="PlayerStats")
 	int Health;
 
+	/**Speed of character during standard walking*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStats")
+	int WalkSpeed;
+
+	/**Speed of character during holding sprint button*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStats")
+	int RunSpeed;
 
 
 protected:
