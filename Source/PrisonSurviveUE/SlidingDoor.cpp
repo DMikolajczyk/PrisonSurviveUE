@@ -10,13 +10,19 @@ ASlidingDoor::ASlidingDoor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	DoorStatic = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door static"));
-	DoorDynamic = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door dynamic"));
-	Offset = 9.f;
-	DoorPositionOpened = FVector(0.f, Offset, 0.f);
-	DoorPositionClosed = FVector(0.f, Offset, 0.f);
-	
+	RootScene = CreateDefaultSubobject<USceneComponent>(TEXT("RootScene"));
+	SetRootComponent(RootScene);
 
+	DoorStatic = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door static"));
+	DoorStatic->AttachToComponent(RootScene, FAttachmentTransformRules::KeepRelativeTransform);
+	DoorDynamic = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door dynamic"));
+	DoorDynamic->AttachToComponent(RootScene, FAttachmentTransformRules::KeepRelativeTransform);
+
+	Offset = 9.f;
+	StaticDoorWidth = 100.f;
+	DoorPositionOpened = FVector(0.f, Offset, 0.f);
+	DoorPositionClosed = FVector(-StaticDoorWidth, Offset, 0.f);
+	Close();
 }
 
 // Called when the game starts or when spawned
@@ -41,20 +47,38 @@ void ASlidingDoor::PostInitializeComponents()
 #if WITH_EDITOR 
 void ASlidingDoor::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
 {
-	FName PropertyName = (PropertyChangedEvent.Property != nullptr) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
-	if ((PropertyName == GET_MEMBER_NAME_CHECKED(ASlidingDoor, Offset)))
-	{
+	//FName PropertyName = (PropertyChangedEvent.Property != nullptr) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
+	//if ((PropertyName == GET_MEMBER_NAME_CHECKED(ASlidingDoor, Offset)))
+	//{
 		UpdateParameters();
-	}
+	//}
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 #endif
 
 void ASlidingDoor::UpdateParameters()
 {
-	StaticDoorWidth = DoorStatic->Bounds.GetBox().GetSize().X;
 	DoorPositionClosed = FVector(-StaticDoorWidth, Offset, 0.f);
 	DoorPositionOpened = FVector(0.0f, Offset, 0.f);
-	DoorDynamic->SetRelativeLocation(DoorPositionClosed);
-	UE_LOG(LogTemp, Warning, TEXT("Door width: %f"), StaticDoorWidth);
+	if (bIsClosed)
+	{
+		DoorDynamic->SetRelativeLocation(DoorPositionClosed);
+	}
+	else
+	{
+		DoorDynamic->SetRelativeLocation(DoorPositionOpened);
+	}
 }
+
+void ASlidingDoor::Close()
+{
+	bIsClosed = true;
+	DoorDynamic->SetRelativeLocation(DoorPositionClosed);
+}
+
+void ASlidingDoor::Open()
+{
+	bIsClosed = false;
+	DoorDynamic->SetRelativeLocation(DoorPositionOpened);
+}
+

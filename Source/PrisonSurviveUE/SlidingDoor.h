@@ -27,10 +27,22 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+	void Close();
+	UFUNCTION(BlueprintCallable)
+	void Open();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transforms")
+	bool bIsClosed;
+
 private:
-	float StaticDoorWidth;
+	
 	void UpdateParameters();
 	
+
+	UPROPERTY(EditAnywhere, Category = "Hierarchy")
+	USceneComponent* RootScene;
+
 	/**Mesh which presents static part of sliding door*/
 	UPROPERTY(EditAnywhere, Category="Mesh")
 	UStaticMeshComponent* DoorStatic;
@@ -42,6 +54,10 @@ private:
 	/**Offset distance between two parts of door*/
 	UPROPERTY(EditAnywhere, Category = "Transforms")
 	float Offset;
+	
+	/**Width of static part of door*/
+	UPROPERTY(EditAnywhere, Category = "Transforms")
+	float StaticDoorWidth;
 
 	/**Position of moving part when it is closed*/
 	UPROPERTY(VisibleAnywhere, Category = "Transforms")
@@ -50,6 +66,8 @@ private:
 	/**Position of moving part when it is opened*/
 	UPROPERTY(VisibleAnywhere, Category = "Transforms")
 	FVector DoorPositionOpened;
+
+	
 
 	
 
