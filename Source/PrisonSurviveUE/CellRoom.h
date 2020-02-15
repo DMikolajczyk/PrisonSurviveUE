@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "SlidingDoor.h"
+
 #include "CellRoom.generated.h"
 
 UCLASS()
@@ -15,24 +17,32 @@ public:
 	// Sets default values for this actor's properties
 	ACellRoom();
 
-	UFUNCTION(BlueprintCallable, Category="m cell properties")
+	UFUNCTION(BlueprintCallable, Category="CellProperties")
 	int GetCellID();
 
-	UFUNCTION(BlueprintCallable, Category = "m cell properties")
+	UFUNCTION(BlueprintCallable, Category = "CellProperties")
 	void SetCellID(int Number);
 
+	UPROPERTY(VisibleAnywhere, Category = "CellObjects")
+	ASlidingDoor* Door;
 	
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void PostInitializeComponents() override;
+
 	/**Prisoner can find own cell by this unique number*/
-	UPROPERTY(VisibleAnywhere, Category = "m cell properties")
+	UPROPERTY(VisibleAnywhere, Category = "CellProperties")
 	int Cell_ID;
 
+	
+
+	void AssignObjectsToParameters();
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
 };
