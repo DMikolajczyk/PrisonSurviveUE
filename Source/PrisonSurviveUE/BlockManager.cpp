@@ -31,10 +31,7 @@ void ABlockManager::BeginPlay()
 			Cells.Add(CellTmp);
 		}
 	}
-	bIsBlockOpen = true;
-
-	//CloseAllCells();
-	
+	OpenAllCells();
 }
 
 
@@ -55,6 +52,7 @@ void ABlockManager::OpenAllCells()
 		}
 				
 	}
+	bIsBlockOpen = true;
 }
 
 void ABlockManager::CloseAllCells() 
@@ -67,6 +65,7 @@ void ABlockManager::CloseAllCells()
 		}
 
 	}
+	bIsBlockOpen = false;
 }
 
 void ABlockManager::RevertStateOfOpenCell() 
