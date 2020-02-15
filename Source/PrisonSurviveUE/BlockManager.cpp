@@ -16,13 +16,14 @@ ABlockManager::ABlockManager()
 // Called when the game starts or when spawned
 void ABlockManager::BeginPlay()
 {
+	// PóŸniej mo¿e zrobiæ z tego singleton wiêc poni¿ej sprawdzenie adresu ¿eby zobaczyæ czy bêdzie jedna referencja
+	UE_LOG(LogTemp, Warning, TEXT("Test of address: %d"), this);
+
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *CellGroup->GetFullName());
-
 	TArray<AActor*> CellsTmp;
-	CellGroup->GetAttachedActors(/*out*/ CellsTmp);
+	CellGroup->GetAttachedActors(CellsTmp);
 
-	for (AActor* Cell : CellsTmp)
+	for (AActor* Cell : CellsTmp)					/// Tu wywala jakiœ b³¹d?
 	{
 		ACellRoom* CellTmp = Cast<ACellRoom>(Cell);
 		if (CellTmp != NULL)
@@ -30,7 +31,9 @@ void ABlockManager::BeginPlay()
 			Cells.Add(CellTmp);
 		}
 	}
-	CloseAllCells();
+	bIsBlockOpen = true;
+
+	//CloseAllCells();
 	
 }
 
@@ -42,26 +45,43 @@ void ABlockManager::Tick(float DeltaTime)
 
 }
 
-void ABlockManager::OpenAllCells() {
+void ABlockManager::OpenAllCells() 
+{
 	for (ACellRoom* Cell : Cells)
 	{
 		if (Cell->Door != NULL)
 		{
 			Cell->Door->Open();
-			UE_LOG(LogTemp, Warning, TEXT("Cell number %d has opened."), Cell->GetCellID());
 		}
 				
 	}
 }
 
-void ABlockManager::CloseAllCells() {
+void ABlockManager::CloseAllCells() 
+{
 	for (ACellRoom* Cell : Cells)
 	{
 		if (Cell->Door != NULL)
 		{
 			Cell->Door->Close();
-			UE_LOG(LogTemp, Warning, TEXT("Cell number %d has closed."), Cell->GetCellID());
 		}
 
 	}
+}
+
+void ABlockManager::RevertStateOfOpenCell() 
+{
+	for (ACellRoom* Cell : Cells)
+	{
+		if (Cell->Door != NULL)
+		{
+			//if (bIsBlockOpen == Cell->Door->bIsOpen)
+			if (bIsBlockOpen == Cell->Door->GetIsOpen())
+			{
+				Cell->Door->ToggleDoor();
+			}
+		}
+
+	}
+	bIsBlockOpen = !bIsBlockOpen;
 }

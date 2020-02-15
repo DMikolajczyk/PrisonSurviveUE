@@ -4,6 +4,7 @@
 #include "SlidingDoor.h"
 #include "Components/StaticMeshComponent.h"
 
+
 // Sets default values
 ASlidingDoor::ASlidingDoor()
 {
@@ -20,9 +21,11 @@ ASlidingDoor::ASlidingDoor()
 
 	Offset = 9.f;
 	StaticDoorWidth = 100.f;
+
 	DoorPositionOpened = FVector(0.f, Offset, 0.f);
-	DoorPositionClosed = FVector(-StaticDoorWidth, Offset, 0.f);
-	Close();
+	DoorDynamic->SetRelativeLocation(DoorPositionOpened);
+	bIsOpen = true;
+
 }
 
 // Called when the game starts or when spawned
@@ -30,12 +33,26 @@ void ASlidingDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (DoorCurve)
+	{
+		FOnTimelineFloat TimelineProgress;
+		TimelineProgress.BindUFunction(this, FName("ControlDoor"));
+		Timeline.AddInterpFloat(DoorCurve, TimelineProgress);
+		
+		/* Funkcja SetState by³aby odpalana w momencie zakoñczenia animacji.
+		FOnTimelineEventStatic TimelineFinishedCallback;
+		TimelineFinishedCallback.BindUFunction(this, FName("SetState"));
+		Timeline.SetTimelineFinishedFunc(TimelineFinishedCallback);
+		*/
+	}
 }
 
 // Called every frame
 void ASlidingDoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	Timeline.TickTimeline(DeltaTime);
 
 }
 
@@ -47,38 +64,62 @@ void ASlidingDoor::PostInitializeComponents()
 #if WITH_EDITOR 
 void ASlidingDoor::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
 {
-	//FName PropertyName = (PropertyChangedEvent.Property != nullptr) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
-	//if ((PropertyName == GET_MEMBER_NAME_CHECKED(ASlidingDoor, Offset)))
-	//{
-		UpdateParameters();
-	//}
+	UpdateParameters();
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 #endif
 
 void ASlidingDoor::UpdateParameters()
 {
-	DoorPositionClosed = FVector(-StaticDoorWidth, Offset, 0.f);
-	DoorPositionOpened = FVector(0.0f, Offset, 0.f);
-	if (bIsClosed)
-	{
-		DoorDynamic->SetRelativeLocation(DoorPositionClosed);
-	}
-	else
-	{
-		DoorDynamic->SetRelativeLocation(DoorPositionOpened);
-	}
+	DoorPositionOpened = FVector(0.f, Offset, 0.f);
+	DoorDynamic->SetRelativeLocation(DoorPositionOpened);
 }
 
 void ASlidingDoor::Close()
 {
-	bIsClosed = true;
-	DoorDynamic->SetRelativeLocation(DoorPositionClosed);
+	if (bIsOpen)
+	{
+		ToggleDoor();
+	}
 }
 
 void ASlidingDoor::Open()
 {
-	bIsClosed = false;
-	DoorDynamic->SetRelativeLocation(DoorPositionOpened);
+	if (!bIsOpen)
+	{
+		ToggleDoor();
+	}
 }
 
+void ASlidingDoor::ControlDoor()
+{
+	// Playback position daje nam informacjê w której czêœci animacji jesteœmy w wartoœci 0-1
+	PlaybackPosition = Timeline.GetPlaybackPosition();
+	CurveFloatValue = DoorCurve->GetFloatValue(PlaybackPosition) * StaticDoorWidth;
+	
+	DoorDynamic->SetRelativeLocation(FVector(-CurveFloatValue, Offset, 0.0f));
+}
+
+void ASlidingDoor::ToggleDoor()
+{
+	bIsOpen = !bIsOpen;
+	if (bIsOpen) 
+	{
+		Timeline.Reverse();
+	}
+	else 
+	{
+		Timeline.Play();
+	}
+	
+}
+
+bool ASlidingDoor::GetIsOpen() 
+{
+	return bIsOpen;
+}
+
+void ASlidingDoor::SetIsOpen(bool open) 
+{
+	bIsOpen = open;
+}

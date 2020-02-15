@@ -27,6 +27,8 @@ protected:
 	void OpenAllCells();
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	void CloseAllCells();
+	UFUNCTION(BlueprintCallable, Category = "Actions")
+	void RevertStateOfOpenCell();
 
 public:	
 	// Called every frame
@@ -35,6 +37,8 @@ public:
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Cells")
 	TArray<ACellRoom*> Cells;
+
+	bool bIsBlockOpen;
 
 	
 };

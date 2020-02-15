@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SlidingDoor.generated.h"
+#include "Components/TimelineComponent.h"
 
+#include "SlidingDoor.generated.h"
 
 UCLASS()
 class PRISONSURVIVEUE_API ASlidingDoor : public AActor
@@ -32,13 +33,36 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Open();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transforms")
-	bool bIsClosed;
+	UFUNCTION()
+	void ControlDoor();
+
+	UFUNCTION()
+	void ToggleDoor();
+
+	UPROPERTY(EditAnywhere, Category="Animation")
+	UCurveFloat* DoorCurve;
+
+	FTimeline Timeline;
+
+	UFUNCTION(BlueprintCallable)
+	bool GetIsOpen();
+	
+	UFUNCTION(BlueprintCallable)
+	void SetIsOpen(bool open);
 
 private:
 	
-	void UpdateParameters();
+	bool bIsOpen;
+
+	/**Value (in seconds) which represents state of playing animation*/
+	float PlaybackPosition;
 	
+	/**Position of moving door with curve correction*/
+	float CurveFloatValue;
+
+	void UpdateParameters();
+
+
 
 	UPROPERTY(EditAnywhere, Category = "Hierarchy")
 	USceneComponent* RootScene;
@@ -58,17 +82,10 @@ private:
 	/**Width of static part of door*/
 	UPROPERTY(EditAnywhere, Category = "Transforms")
 	float StaticDoorWidth;
-
-	/**Position of moving part when it is closed*/
-	UPROPERTY(VisibleAnywhere, Category = "Transforms")
-	FVector DoorPositionClosed;
-
+	
 	/**Position of moving part when it is opened*/
 	UPROPERTY(VisibleAnywhere, Category = "Transforms")
 	FVector DoorPositionOpened;
-
-	
-
 	
 
 };
