@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SlidingDoor.h"
 #include "Blueprint/UserWidget.h"
+#include "UI_Manager.h"
 #include "PrisonSurviveUECharacter.generated.h"
 
 UCLASS(config=Game)
@@ -104,16 +105,18 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
 	TSubclassOf<class UUserWidget> InfoWidget;
 
 	UUserWidget* InfoWidgetObj;
-	
-	UFUNCTION(BlueprintCallable)
-	void SetVisibilityOfInfo(ESlateVisibility Visibility, int Option);
+		*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* MyUIManager;
 
-	UFUNCTION(BlueprintCallable)
-	void SampleFun();
+
+	/*UFUNCTION(BlueprintCallable)
+	void SetVisibilityOfInfo(ESlateVisibility Visibility, int Option);*/
+
 	
 
 };

@@ -12,4 +12,8 @@ APrisonSurviveUEGameMode::APrisonSurviveUEGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+
+	
 }
+
+

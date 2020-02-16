@@ -51,7 +51,8 @@ APrisonSurviveUECharacter::APrisonSurviveUECharacter()
 	WalkSpeed = 300;
 	RunSpeed = 600;
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-
+	
+	//MyUIManager = CreateDefaultSubobject<AUI_Manager>(TEXT("MyUI_Manager"));
 	/*Door = NULL;
 	InfoWidget = nullptr;*/
 }
@@ -60,7 +61,7 @@ APrisonSurviveUECharacter::APrisonSurviveUECharacter()
 void APrisonSurviveUECharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	if (InfoWidget)
+	/*if (InfoWidget)
 	{
 		InfoWidgetObj = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), InfoWidget);
 		if (InfoWidgetObj)
@@ -68,7 +69,7 @@ void APrisonSurviveUECharacter::BeginPlay()
 			InfoWidgetObj->AddToViewport();
 			SetVisibilityOfInfo(ESlateVisibility::Hidden, 0);
 		}
-	}
+	}*/
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -239,13 +240,15 @@ void APrisonSurviveUECharacter::OnAction()
 	}*/
 }
 
-void APrisonSurviveUECharacter::SetVisibilityOfInfo(ESlateVisibility Visibility, int Option)
+/*void APrisonSurviveUECharacter::SetVisibilityOfInfo(ESlateVisibility Visibility, int Option)
 {
 	switch (Option)
 	{
 		case 0:
 			InfoWidgetObj->GetWidgetFromName("doorOpenInfo")->SetVisibility(Visibility);
 			InfoWidgetObj->GetWidgetFromName("doorCloseInfo")->SetVisibility(Visibility);
+			InfoWidgetObj->GetWidgetFromName("blockOpenInfo")->SetVisibility(Visibility);
+			InfoWidgetObj->GetWidgetFromName("blockCloseInfo")->SetVisibility(Visibility);
 			break;
 		case 1:
 			InfoWidgetObj->GetWidgetFromName("doorOpenInfo")->SetVisibility(Visibility);
@@ -253,10 +256,13 @@ void APrisonSurviveUECharacter::SetVisibilityOfInfo(ESlateVisibility Visibility,
 		case 2:
 			InfoWidgetObj->GetWidgetFromName("doorCloseInfo")->SetVisibility(Visibility);
 			break;
+		case 3:
+			InfoWidgetObj->GetWidgetFromName("blockOpenInfo")->SetVisibility(Visibility);
+			break;
+		case 4:
+			InfoWidgetObj->GetWidgetFromName("blockCloseInfo")->SetVisibility(Visibility);
+			break;
 
 	}
 }
-
-void APrisonSurviveUECharacter::SampleFun()
-{
-}
+*/

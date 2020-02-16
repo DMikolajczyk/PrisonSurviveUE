@@ -11,6 +11,7 @@ class APrisonSurviveUEGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+		
 public:
 	APrisonSurviveUEGameMode();
 };

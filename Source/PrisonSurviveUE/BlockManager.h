@@ -16,6 +16,12 @@ public:
 	// Sets default values for this actor's properties
 	ABlockManager();
 
+	UFUNCTION(BlueprintCallable)
+	bool GetIsBlockOpen();
+
+	UFUNCTION(BlueprintCallable)
+	void SetIsBlockOpen(bool open);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

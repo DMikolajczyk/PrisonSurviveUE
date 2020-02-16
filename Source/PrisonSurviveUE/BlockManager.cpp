@@ -84,3 +84,13 @@ void ABlockManager::RevertStateOfOpenCell()
 	}
 	bIsBlockOpen = !bIsBlockOpen;
 }
+
+bool ABlockManager::GetIsBlockOpen()
+{
+	return bIsBlockOpen;
+}
+
+void ABlockManager::SetIsBlockOpen(bool open)
+{
+	bIsBlockOpen = open;
+}
