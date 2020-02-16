@@ -51,12 +51,28 @@ APrisonSurviveUECharacter::APrisonSurviveUECharacter()
 	WalkSpeed = 300;
 	RunSpeed = 600;
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
+	/*Door = NULL;
+	InfoWidget = nullptr;*/
+}
+
+
+void APrisonSurviveUECharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	if (InfoWidget)
+	{
+		InfoWidgetObj = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), InfoWidget);
+		if (InfoWidgetObj)
+		{
+			InfoWidgetObj->AddToViewport();
+			SetVisibilityOfInfo(ESlateVisibility::Hidden, 0);
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Input
-
-
 
 void APrisonSurviveUECharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
@@ -70,6 +86,8 @@ void APrisonSurviveUECharacter::SetupPlayerInputComponent(class UInputComponent*
 
 	PlayerInputComponent->BindAction("HealTest", IE_Pressed, this, &APrisonSurviveUECharacter::HealTest);
 	PlayerInputComponent->BindAction("DamageTest", IE_Pressed, this, &APrisonSurviveUECharacter::DamageTest);
+
+	PlayerInputComponent->BindAction("Action", IE_Pressed, this, &APrisonSurviveUECharacter::OnAction);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &APrisonSurviveUECharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &APrisonSurviveUECharacter::MoveRight);
@@ -200,3 +218,45 @@ void APrisonSurviveUECharacter::PostEditChangeProperty(struct FPropertyChangedEv
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 #endif
+
+/*void APrisonSurviveUECharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (InfoWidget)
+	{
+		InfoWidget->GetWidgetFromName("doorOpeningInfo")->SetVisibility(ESlateVisibility::Visible);
+	}
+	
+	//Door = Cast<ASlidingDoor>
+
+}
+*/
+void APrisonSurviveUECharacter::OnAction()
+{
+	/*if (Door)
+	{
+		Door->ToggleDoor();
+	}*/
+}
+
+void APrisonSurviveUECharacter::SetVisibilityOfInfo(ESlateVisibility Visibility, int Option)
+{
+	switch (Option)
+	{
+		case 0:
+			InfoWidgetObj->GetWidgetFromName("doorOpenInfo")->SetVisibility(Visibility);
+			InfoWidgetObj->GetWidgetFromName("doorCloseInfo")->SetVisibility(Visibility);
+			break;
+		case 1:
+			InfoWidgetObj->GetWidgetFromName("doorOpenInfo")->SetVisibility(Visibility);
+			break;
+		case 2:
+			InfoWidgetObj->GetWidgetFromName("doorCloseInfo")->SetVisibility(Visibility);
+			break;
+
+	}
+}
+
+void APrisonSurviveUECharacter::SampleFun()
+{
+}

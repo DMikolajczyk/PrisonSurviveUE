@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "SlidingDoor.h"
+#include "Blueprint/UserWidget.h"
 #include "PrisonSurviveUECharacter.generated.h"
 
 UCLASS(config=Game)
@@ -30,6 +32,8 @@ public:
 	float BaseLookUpRate;
 
 protected:
+	virtual void BeginPlay() override;
+	//virtual void Tick(float DeltaTime) override;
 
 	/** Resets HMD orientation in VR. */
 	void OnResetVR();
@@ -67,6 +71,8 @@ protected:
 	void TakeDamage(int Amount);
 	void DamageTest();
 
+	void OnAction();
+
 	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
 	/** Maximum value of health*/
@@ -85,6 +91,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStats")
 	int RunSpeed;
 
+	
 
 protected:
 	// APawn interface
@@ -96,5 +103,18 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+	TSubclassOf<class UUserWidget> InfoWidget;
+
+	UUserWidget* InfoWidgetObj;
+	
+	UFUNCTION(BlueprintCallable)
+	void SetVisibilityOfInfo(ESlateVisibility Visibility, int Option);
+
+	UFUNCTION(BlueprintCallable)
+	void SampleFun();
+	
+
 };
 
