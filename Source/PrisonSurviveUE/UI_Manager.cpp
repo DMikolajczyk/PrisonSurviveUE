@@ -20,7 +20,6 @@ void AUI_Manager::BeginPlay()
 
 	PlayerStaticWidget = AddWidget(PlayerStaticWidget, PlayerStaticHUD, ESlateVisibility::Visible);
 	InfoWidget = AddWidget(InfoWidget, InfoHUD, ESlateVisibility::Hidden);
-	ShowHint(FString("Testing assign of hint text"));
 }
 
 // Called every frame

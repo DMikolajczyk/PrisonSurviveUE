@@ -33,8 +33,6 @@ public:
 	float BaseLookUpRate;
 
 protected:
-	virtual void BeginPlay() override;
-	//virtual void Tick(float DeltaTime) override;
 
 	/** Resets HMD orientation in VR. */
 	void OnResetVR();
@@ -105,19 +103,8 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
-	TSubclassOf<class UUserWidget> InfoWidget;
-
-	UUserWidget* InfoWidgetObj;
-		*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* MyUIManager;
-
-
-	/*UFUNCTION(BlueprintCallable)
-	void SetVisibilityOfInfo(ESlateVisibility Visibility, int Option);*/
-
-	
 
 };
 
