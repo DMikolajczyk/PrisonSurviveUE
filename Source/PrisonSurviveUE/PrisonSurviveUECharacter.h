@@ -33,7 +33,7 @@ public:
 	float BaseLookUpRate;
 
 protected:
-
+	virtual void BeginPlay() override;
 	/** Resets HMD orientation in VR. */
 	void OnResetVR();
 
@@ -105,6 +105,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* MyUIManager;
+
 
 };
 
