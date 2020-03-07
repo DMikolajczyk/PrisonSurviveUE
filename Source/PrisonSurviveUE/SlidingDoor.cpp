@@ -75,7 +75,7 @@ void ASlidingDoor::UpdateParameters()
 	DoorDynamic->SetRelativeLocation(DoorPositionOpened);
 }
 
-void ASlidingDoor::Close()
+void ASlidingDoor::Close() 
 {
 	if (bIsOpen)
 	{

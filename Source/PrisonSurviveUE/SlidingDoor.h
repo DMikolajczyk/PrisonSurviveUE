@@ -22,7 +22,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void PostInitializeComponents() override;
-	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent);
 
 public:	
 	// Called every frame

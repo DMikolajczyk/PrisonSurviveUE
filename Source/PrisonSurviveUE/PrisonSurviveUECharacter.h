@@ -7,10 +7,11 @@
 #include "SlidingDoor.h"
 #include "Blueprint/UserWidget.h"
 #include "UI_Manager.h"
+#include "Interfaces/PrisonerPlayerInterface.h"
 #include "PrisonSurviveUECharacter.generated.h"
 
 UCLASS(config=Game)
-class APrisonSurviveUECharacter : public ACharacter
+class APrisonSurviveUECharacter : public ACharacter, public IPrisonerPlayerInterface
 {
 	GENERATED_BODY()
 
@@ -72,7 +73,7 @@ protected:
 
 	void OnAction();
 
-	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent);
 
 	/** Maximum value of health*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStats")
