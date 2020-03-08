@@ -50,13 +50,14 @@ APrisonSurviveUECharacter::APrisonSurviveUECharacter()
 	Health = HealthMax;
 	WalkSpeed = 300;
 	RunSpeed = 600;
-	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;	
+	
 
 }
 
 void APrisonSurviveUECharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
 //////////////////////////////////////////////////////////////////////////
