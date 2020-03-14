@@ -8,8 +8,12 @@
 #include "Waypoint.h"
 #include "Kismet/GameplayStatics.h"
 #include "PrisonSurviveUECharacter.h"
+#include "UObject/ConstructorHelpers.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
-APrisonerControllerAI::APrisonerControllerAI()
+APrisonerControllerAI::APrisonerControllerAI(const FObjectInitializer& ObjInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -32,32 +36,44 @@ APrisonerControllerAI::APrisonerControllerAI()
 	   
 	GetPerceptionComponent()->OnPerceptionUpdated.AddDynamic(this, &APrisonerControllerAI::OnPawnDetected);
 	
-	
+	BehaviorTreeComp = ObjInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComponent"));
+	BlackboardComp = ObjInitializer.CreateDefaultSubobject<UBlackboardComponent>(this, TEXT("BlackboardComponent"));
+
 }
 
 void APrisonerControllerAI::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SightConfig->SightRadius = SightRadius;
+	/*SightConfig->SightRadius = SightRadius;
 	SightConfig->LoseSightRadius = LoseSightRadius + SightRadius;
 	SightConfig->PeripheralVisionAngleDegrees = FieldOfView;
 	SightConfig->SetMaxAge(SightAge);
 	GetPerceptionComponent()->SetDominantSense(*SightConfig->GetSenseImplementation());
 	GetPerceptionComponent()->ConfigureSense(*SightConfig);
-
+ 
 	PrisonerAI = Cast<APrisonerCharacterAI>(GetPawn());
 
 	if (PrisonerAI->NextWaypoint == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No NextWaypoint assign"));
 	}
+	*/
+	RunBehaviorTree(BehaviorTree);
+	BehaviorTreeComp->StartTree(*BehaviorTree);
+
 }
 
 void APrisonerControllerAI::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 	UE_LOG(LogTemp, Warning, TEXT("Posses"));
+
+	if (BlackboardComp)
+	{
+		BlackboardComp->InitializeBlackboard(*BehaviorTree->BlackboardAsset); 
+	}
+
 }
 
 void APrisonerControllerAI::OnUnPossess()
@@ -70,14 +86,14 @@ void APrisonerControllerAI::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	
-	if ((PrisonerAI->NextWaypoint != nullptr) && (TargetedCharacter == nullptr))
+	/*if ((PrisonerAI->NextWaypoint != nullptr) && (TargetedCharacter == nullptr))
 	{
 		MoveToActor(PrisonerAI->NextWaypoint, 5.0f);
 	}
 	else if (TargetedCharacter != nullptr)
 	{
 		MoveToActor(TargetedCharacter);
-	}
+	}*/
 }
 
 FRotator APrisonerControllerAI::GetControlRotation() const
@@ -120,4 +136,10 @@ void APrisonerControllerAI::OnPawnDetected(const TArray<AActor*> &DetectedPawns)
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("AI %s spotting %d actors"), *GetName() ,ActorsInRange.Num());
 	
+}
+
+
+UBlackboardComponent* APrisonerControllerAI::GetBlackboardComponent() const
+{
+	return BlackboardComp;
 }

@@ -15,7 +15,7 @@ class PRISONSURVIVEUE_API APrisonerControllerAI : public AAIController
 	GENERATED_BODY()
 
 public:
-	APrisonerControllerAI();
+	APrisonerControllerAI(const FObjectInitializer& ObjInitializer = FObjectInitializer::Get());
 
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
@@ -61,5 +61,16 @@ public:
 
 	UPROPERTY()
 	TArray <float> test;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	class UBehaviorTree* BehaviorTree;
+
+	class UBlackboardComponent* GetBlackboardComponent() const;
+
+private:
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
+	class UBehaviorTreeComponent* BehaviorTreeComp;
+
+	class UBlackboardComponent* BlackboardComp;
 
 };

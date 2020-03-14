@@ -8,6 +8,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Runtime/Engine/Classes/Engine/World.h"
+#include "Components/SkeletalMeshComponent.h"
+//#include "Materials/MaterialInstanceDynamic.h"
+#include "GameFramework/PlayerController.h"
 
 //////////////////////////////////////////////////////////////////////////
 // APrisonSurviveUECharacter
@@ -58,6 +62,9 @@ void APrisonSurviveUECharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	APlayerCameraManager* const CameraManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
+	CameraManager->ViewPitchMax = 40.0f;
+	CameraManager->ViewPitchMin = -40.0f;
 }
 
 //////////////////////////////////////////////////////////////////////////
