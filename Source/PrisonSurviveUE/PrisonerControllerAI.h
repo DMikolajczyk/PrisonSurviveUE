@@ -29,28 +29,30 @@ public:
 		
 	/**How far AI character can spot anything*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI parameters")
-	float SightRadius;
+	float SightRadius = 500.0f;
 
 	/**How long save last point where AI spotted other character [seconds]*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI parameters")
-	float SightAge;
+	float SightAge = 5.0f;
 
 	/**Distance from spotting border, where AI lost other character after spot (0 is equal to "Sight Radius")*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI parameters")
-	float LoseSightRadius;
+	float LoseSightRadius = 200.0f;
 
 	/**Field of view where AI can spot other characters*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI parameters")
-	float FieldOfView;
+	float FieldOfView = 80.0f;
 
 	UPROPERTY(EditAnywhere)
-	float DistanceOffsetToTarget;
+	float DistanceOffsetToTarget = 50.0f;
 
 	UPROPERTY(VisibleAnywhere)
 	AActor* TargetedCharacter;
 
 	/**Object which handle parameters for spotting*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI parameters")
+	//UPROPERTY(VisibleAnywhere, Instanced, BlueprintReadWrite, Category = "AI parameters")
+	//class UAISenseConfig_Sight* SightConfig;
+	
 	class UAISenseConfig_Sight* SightConfig;
 
 	UPROPERTY()

@@ -19,12 +19,12 @@ EBTNodeResult::Type UBTTask_FindRandomLocation::ExecuteTask(UBehaviorTreeCompone
 	APawn* const Pawn = Controller->GetPawn();
 
 	FVector const Origin = Pawn->GetActorLocation();
-	FNavLocation Location;
+	FNavLocation NavLocation;
 
 	UNavigationSystemV1* const NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
-	if (NavSystem->GetRandomPointInNavigableRadius(Origin, SearchRadius, Location, nullptr))
+	if (NavSystem->GetRandomPointInNavigableRadius(Origin, SearchRadius, NavLocation, nullptr))
 	{
-		Controller->GetBlackboardComponent()->SetValueAsVector(bbKeys::TargetLocation, Location.Location);
+		Controller->GetBlackboardComponent()->SetValueAsVector(bbKeys::TargetLocation, NavLocation.Location);
 	}
 
 	FinishLatentTask(ownerComponent, EBTNodeResult::Succeeded);

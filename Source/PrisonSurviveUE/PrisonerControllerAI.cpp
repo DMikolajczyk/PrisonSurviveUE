@@ -4,6 +4,7 @@
 #include "PrisonerControllerAI.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "PrisonerCharacterAI.h"
 #include "Waypoint.h"
 #include "Kismet/GameplayStatics.h"
@@ -12,46 +13,58 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BlackboardKeys.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/Engine/Classes/Engine/World.h"
+#include "GameFramework/Character.h"
 
 APrisonerControllerAI::APrisonerControllerAI(const FObjectInitializer& ObjInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	SightRadius = 500.0f;
-	SightAge = 5.0f;
-	LoseSightRadius = 200.0f;
-	FieldOfView = 80;
-	DistanceOffsetToTarget = 50.0f;
-
+	
 	PrisonerAI = nullptr;
 	TargetedCharacter = nullptr;
-
+	
+	BehaviorTreeComp = ObjInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComponent"));
+	BlackboardComp = ObjInitializer.CreateDefaultSubobject<UBlackboardComponent>(this, TEXT("BlackboardComponent"));
+	
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
+	
 
 	SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception Component")));
+
+	//SightConfig->AutoSuccessRangeFromLastSeenLocation = 500.0f;
 
 	SightConfig->DetectionByAffiliation.bDetectEnemies = true;
 	SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
 	SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
-	   
+
+	
+	
 	GetPerceptionComponent()->OnPerceptionUpdated.AddDynamic(this, &APrisonerControllerAI::OnPawnDetected);
 	
-	BehaviorTreeComp = ObjInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComponent"));
-	BlackboardComp = ObjInitializer.CreateDefaultSubobject<UBlackboardComponent>(this, TEXT("BlackboardComponent"));
-
 }
 
 void APrisonerControllerAI::BeginPlay()
 {
 	Super::BeginPlay();
+	if (SightConfig == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Sight config assign!"));
+	}
+	else
+	{
+		SightConfig->SightRadius = SightRadius;
+		SightConfig->LoseSightRadius = LoseSightRadius + SightRadius;
+		SightConfig->PeripheralVisionAngleDegrees = FieldOfView;
+		SightConfig->SetMaxAge(SightAge);
 
-	/*SightConfig->SightRadius = SightRadius;
-	SightConfig->LoseSightRadius = LoseSightRadius + SightRadius;
-	SightConfig->PeripheralVisionAngleDegrees = FieldOfView;
-	SightConfig->SetMaxAge(SightAge);
-	GetPerceptionComponent()->SetDominantSense(*SightConfig->GetSenseImplementation());
-	GetPerceptionComponent()->ConfigureSense(*SightConfig);
- 
+		GetPerceptionComponent()->SetDominantSense(*SightConfig->GetSenseImplementation());
+		GetPerceptionComponent()->ConfigureSense(*SightConfig);
+	}
+
+	//SightConfig->AutoSuccessRangeFromLastSeenLocation = 500.0f;
+	/*
 	PrisonerAI = Cast<APrisonerCharacterAI>(GetPawn());
 
 	if (PrisonerAI->NextWaypoint == nullptr)
@@ -61,7 +74,7 @@ void APrisonerControllerAI::BeginPlay()
 	*/
 	RunBehaviorTree(BehaviorTree);
 	BehaviorTreeComp->StartTree(*BehaviorTree);
-
+	
 }
 
 void APrisonerControllerAI::OnPossess(APawn* InPawn)
@@ -69,7 +82,7 @@ void APrisonerControllerAI::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 	UE_LOG(LogTemp, Warning, TEXT("Posses"));
 
-	if (BlackboardComp)
+	if (BlackboardComp != nullptr)
 	{
 		BlackboardComp->InitializeBlackboard(*BehaviorTree->BlackboardAsset); 
 	}
@@ -107,7 +120,21 @@ FRotator APrisonerControllerAI::GetControlRotation() const
 
 void APrisonerControllerAI::OnPawnDetected(const TArray<AActor*> &DetectedPawns)
 {
-	for (AActor* DetectedActor : DetectedPawns) 
+	for (AActor* DetectedActor : DetectedPawns)
+	{
+		APrisonSurviveUECharacter* CharacterPlayer = Cast<APrisonSurviveUECharacter>(DetectedActor);
+		if ((CharacterPlayer) && (!GetBlackboardComponent()->GetValueAsBool(bbKeys::CanSeePlayer)))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("AI %s spotted player"), *GetName());
+			GetBlackboardComponent()->SetValueAsBool(bbKeys::CanSeePlayer, true);
+		}
+		else if ((CharacterPlayer) && (GetBlackboardComponent()->GetValueAsBool(bbKeys::CanSeePlayer)))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("AI %s lost player"), *GetName());
+			GetBlackboardComponent()->SetValueAsBool(bbKeys::CanSeePlayer, false);
+		}
+	}
+	/*for (AActor* DetectedActor : DetectedPawns) 
 	{
 		if (ActorsInRange.Contains(DetectedActor))
 		{
@@ -133,7 +160,7 @@ void APrisonerControllerAI::OnPawnDetected(const TArray<AActor*> &DetectedPawns)
 			}
 		}
 		
-	}
+	}*/
 	//UE_LOG(LogTemp, Warning, TEXT("AI %s spotting %d actors"), *GetName() ,ActorsInRange.Num());
 	
 }

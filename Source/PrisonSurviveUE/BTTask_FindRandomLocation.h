@@ -20,7 +20,7 @@ class PRISONSURVIVEUE_API UBTTask_FindRandomLocation : public UBTTask_Blackboard
 
 public:
 	UBTTask_FindRandomLocation(const FObjectInitializer& objectInitializer);
-	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& ownerComponent, uint8* nodeMemory);
+	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& ownerComponent, uint8* nodeMemory) override;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search", meta = (AllowPrivateAccess = "true"))
