@@ -6,7 +6,6 @@
 #include "GameFramework/Character.h"
 #include "SlidingDoor.h"
 #include "Blueprint/UserWidget.h"
-#include "UI_Manager.h"
 #include "Interfaces/PrisonerPlayerInterface.h"
 #include "PrisonSurviveUECharacter.generated.h"
 
@@ -110,9 +109,6 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* MyUIManager;
-
 	UFUNCTION(BlueprintCallable)
 	void ShowHint(FString Text);
 

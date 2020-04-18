@@ -19,15 +19,10 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Meta = (BlueprintProtected = "true"))
 	TSubclassOf<class UUserWidget> PlayerHUD;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Meta = (BlueprintProtected = "true"))
-	TSubclassOf<class UUserWidget> HintUI;
 	
 	UPROPERTY()
 	class UUserWidget* PlayerHUDWidget;
 
-	UPROPERTY()
-	class UUserWidget* InfoWidget;
 };
 
 

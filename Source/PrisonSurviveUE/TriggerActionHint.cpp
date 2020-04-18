@@ -5,15 +5,13 @@
 
 ATriggerActionHint::ATriggerActionHint() 
 {
-	Text = TEXT("Default text");
+	//Text = TEXT("Default text");
 	OnActorBeginOverlap.AddDynamic(this, &ATriggerActionHint::OnBeginOverlap);
 	OnActorEndOverlap.AddDynamic(this, &ATriggerActionHint::OnEndOverlap);
-	//Player = GetWorld()->GetFirstPlayerController()->GetCharacter()
 
 	HintsText = {
 		"One",
-		"Two",
-		"Three"
+		"Two"
 	};
 
 }
@@ -21,28 +19,24 @@ ATriggerActionHint::ATriggerActionHint()
 void ATriggerActionHint::BeginPlay()
 {
 	Super::BeginPlay();
-	Text = HintsText[1];
 }
 
 void ATriggerActionHint::OnBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	if ((OtherActor != nullptr) && (OtherActor != this) && (Cast<APrisonSurviveUECharacter>(OtherActor)))
+	APrisonSurviveUECharacter* Player = Cast<APrisonSurviveUECharacter>(OtherActor);
+	if (Player)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Collision with player detected "));
-		APrisonSurviveUECharacter* Tmp = Cast<APrisonSurviveUECharacter>(OtherActor);
-		//AUI_Manager* UIManager = Tmp->FindComponentByClass<AUI_Manager>();// ->ShowHint(Text);
-		Cast<AUI_Manager>(Tmp->MyUIManager)->ShowHint(Text);
+		Player->ShowHint("Test 1254");
 	}
-	
 }
 
 void ATriggerActionHint::OnEndOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	if ((OtherActor != nullptr) && (OtherActor != this) && (Cast<APrisonSurviveUECharacter>(OtherActor)))
+	APrisonSurviveUECharacter* Player = Cast<APrisonSurviveUECharacter>(OtherActor);
+	if (Player)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("End of player collision "));
-		APrisonSurviveUECharacter* Tmp = Cast<APrisonSurviveUECharacter>(OtherActor);
-		//Tmp->FindComponentByClass<AUI_Manager>()->HideHint();
-		Cast<AUI_Manager>(Tmp->MyUIManager)->HideHint();
+		UE_LOG(LogTemp, Warning, TEXT("Player left the collision"));
+		Player->HideHint();
 	}
 }

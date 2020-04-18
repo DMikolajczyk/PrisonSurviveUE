@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Engine/TriggerBox.h"
 #include "PrisonSurviveUECharacter.h"
-#include "UI_Manager.h"
 #include "TriggerActionHint.generated.h"
 
 
@@ -23,13 +22,6 @@ protected:
 
 public:
 	ATriggerActionHint();
-
-	UFUNCTION()
-	void OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
-
-	UFUNCTION()
-	void OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor);
-
 
 	*/
 

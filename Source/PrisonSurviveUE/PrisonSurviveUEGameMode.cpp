@@ -34,12 +34,4 @@ void APrisonSurviveUEGameMode::BeginPlay()
 			PlayerHUDWidget->AddToViewport();
 		}
 	}
-	if (HintUI)
-	{
-		InfoWidget = CreateWidget<UUserWidget>(GetWorld(), HintUI);
-		if (InfoWidget)
-		{
-			InfoWidget->AddToViewport();
-		}
-	}
 }
