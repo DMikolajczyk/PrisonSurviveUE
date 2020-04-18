@@ -91,6 +91,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStats")
 	int RunSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsHintVisible;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString ActualHintText;
+
 	
 
 protected:
@@ -107,6 +113,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* MyUIManager;
 
+	UFUNCTION(BlueprintCallable)
+	void ShowHint(FString Text);
+
+	UFUNCTION(BlueprintCallable)
+	void HideHint();
 
 };
 

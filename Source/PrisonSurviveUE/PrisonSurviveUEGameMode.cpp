@@ -3,6 +3,10 @@
 #include "PrisonSurviveUEGameMode.h"
 #include "PrisonSurviveUECharacter.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
+
+
 
 APrisonSurviveUEGameMode::APrisonSurviveUEGameMode()
 {
@@ -17,3 +21,25 @@ APrisonSurviveUEGameMode::APrisonSurviveUEGameMode()
 }
 
 
+void APrisonSurviveUEGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+	APrisonSurviveUECharacter* MyCharacter = Cast<APrisonSurviveUECharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+
+	if (PlayerHUD)
+	{
+		PlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHUD);
+		if (PlayerHUDWidget)
+		{
+			PlayerHUDWidget->AddToViewport();
+		}
+	}
+	if (HintUI)
+	{
+		InfoWidget = CreateWidget<UUserWidget>(GetWorld(), HintUI);
+		if (InfoWidget)
+		{
+			InfoWidget->AddToViewport();
+		}
+	}
+}

@@ -30,6 +30,7 @@ void ATriggerActionHint::OnBeginOverlap(AActor* OverlappedActor, AActor* OtherAc
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Collision with player detected "));
 		APrisonSurviveUECharacter* Tmp = Cast<APrisonSurviveUECharacter>(OtherActor);
+		//AUI_Manager* UIManager = Tmp->FindComponentByClass<AUI_Manager>();// ->ShowHint(Text);
 		Cast<AUI_Manager>(Tmp->MyUIManager)->ShowHint(Text);
 	}
 	
@@ -41,6 +42,7 @@ void ATriggerActionHint::OnEndOverlap(AActor* OverlappedActor, AActor* OtherActo
 	{
 		UE_LOG(LogTemp, Warning, TEXT("End of player collision "));
 		APrisonSurviveUECharacter* Tmp = Cast<APrisonSurviveUECharacter>(OtherActor);
+		//Tmp->FindComponentByClass<AUI_Manager>()->HideHint();
 		Cast<AUI_Manager>(Tmp->MyUIManager)->HideHint();
 	}
 }

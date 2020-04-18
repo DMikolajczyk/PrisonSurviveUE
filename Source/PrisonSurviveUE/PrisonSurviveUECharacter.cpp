@@ -55,6 +55,8 @@ APrisonSurviveUECharacter::APrisonSurviveUECharacter()
 	WalkSpeed = 300;
 	RunSpeed = 600;
 	
+	bIsHintVisible = false;
+	ActualHintText = "No hint";
 
 }
 
@@ -219,4 +221,15 @@ void APrisonSurviveUECharacter::PostEditChangeProperty(struct FPropertyChangedEv
 void APrisonSurviveUECharacter::OnAction()
 {
 	
+}
+
+void APrisonSurviveUECharacter::ShowHint(FString Text)
+{
+	ActualHintText = Text;
+	bIsHintVisible = true;
+}
+
+void APrisonSurviveUECharacter::HideHint()
+{
+	bIsHintVisible = false;
 }
