@@ -10,7 +10,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "Components/SkeletalMeshComponent.h"
-//#include "Materials/MaterialInstanceDynamic.h"
+#include "Engine/Engine.h"
+#include "MySaveGame.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -104,6 +106,11 @@ void APrisonSurviveUECharacter::SetupPlayerInputComponent(class UInputComponent*
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &APrisonSurviveUECharacter::OnResetVR);
+
+	// Saving
+	PlayerInputComponent->BindAction("Save", IE_Released, this, &APrisonSurviveUECharacter::SaveGame);
+	PlayerInputComponent->BindAction("Load", IE_Released, this, &APrisonSurviveUECharacter::LoadGame);
+
 }
 
 
@@ -232,4 +239,21 @@ void APrisonSurviveUECharacter::ShowHint(FString Text)
 void APrisonSurviveUECharacter::HideHint()
 {
 	bIsHintVisible = false;
+}
+
+void APrisonSurviveUECharacter::SaveGame()
+{
+	UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+	SaveGameInstance->PlayerLocation = GetActorLocation();
+	SaveGameInstance->PlayerHealth = Health;
+	UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("MySlot"), 0);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Game saved."));
+}
+
+void APrisonSurviveUECharacter::LoadGame()
+{
+	UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("MySlot"), 0));
+	SetActorLocation(SaveGameInstance->PlayerLocation);
+	Health = SaveGameInstance->PlayerHealth;
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Game loaded."));
 }

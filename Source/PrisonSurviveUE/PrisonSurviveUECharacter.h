@@ -115,5 +115,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void HideHint();
 
+	private:
+		void SaveGame();
+		void LoadGame();
+
 };
 
