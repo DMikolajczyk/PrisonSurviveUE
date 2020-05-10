@@ -3,8 +3,16 @@
 
 #include "PrisonerAIController.h"
 
+
+APrisonerAIController::APrisonerAIController()
+{
+
+}
+
 void APrisonerAIController::BeginPlay()
 {
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Warning, TEXT("Controller AI"));
 }
+
+

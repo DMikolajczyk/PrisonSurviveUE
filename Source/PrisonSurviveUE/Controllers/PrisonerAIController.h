@@ -14,7 +14,10 @@ class PRISONSURVIVEUE_API APrisonerAIController : public AAIController
 {
 	GENERATED_BODY()
 	
-protected:
-	void BeginPlay() override;
+public:
+	APrisonerAIController();
 
+protected:
+	virtual void BeginPlay() override;
+	
 };
