@@ -54,11 +54,11 @@ void APrisonerControllerAI::BeginPlay()
 	}
 	else
 	{
-		SightConfig->SightRadius = SightRadius;
+		/*SightConfig->SightRadius = SightRadius;
 		SightConfig->LoseSightRadius = LoseSightRadius + SightRadius;
 		SightConfig->PeripheralVisionAngleDegrees = FieldOfView;
 		SightConfig->SetMaxAge(SightAge);
-
+		*/
 		GetPerceptionComponent()->SetDominantSense(*SightConfig->GetSenseImplementation());
 		GetPerceptionComponent()->ConfigureSense(*SightConfig);
 	}
@@ -75,6 +75,7 @@ void APrisonerControllerAI::BeginPlay()
 	RunBehaviorTree(BehaviorTree);
 	BehaviorTreeComp->StartTree(*BehaviorTree);
 	
+	UE_LOG(LogTemp, Warning, TEXT("AI begin play"));
 }
 
 void APrisonerControllerAI::OnPossess(APawn* InPawn)
